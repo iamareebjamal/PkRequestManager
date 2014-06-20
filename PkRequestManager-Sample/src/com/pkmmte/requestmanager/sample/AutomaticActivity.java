@@ -1,21 +1,22 @@
 package com.pkmmte.requestmanager.sample;
 
-import android.app.Activity;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.pkmmte.requestmanager.AppLoadListener;
 import com.pkmmte.requestmanager.PkRequestManager;
 import com.pkmmte.requestmanager.RequestSettings;
 import com.pkmmte.requestmanager.SendRequestListener;
 
-public class AutomaticActivity extends Activity implements OnClickListener, AppLoadListener, SendRequestListener
+public class AutomaticActivity extends SherlockActivity implements OnClickListener, AppLoadListener, SendRequestListener
 {
 	// Request Manager
 	private PkRequestManager mRequestManager;
@@ -34,7 +35,7 @@ public class AutomaticActivity extends Activity implements OnClickListener, AppL
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_automatic);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Initialize your layout views
 		initViews();
@@ -102,7 +103,7 @@ public class AutomaticActivity extends Activity implements OnClickListener, AppL
 		.emailPrecontent("These apps are missing on my phone:\n\n")
 		.createAppfilter(true)
 		.createZip(true)
-		.filterAutomatic(true)
+		.filterAutomatic(false) //Set filter apps to false for development purpose
 		.build());
 	}
 	

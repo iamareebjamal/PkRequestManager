@@ -1,5 +1,18 @@
-PkRequestManager
-================
+PkRequestManager Backport
+=========================
+
+PkRequestManager Backport to GB by iamareebjamal
+
+Inititation
+--------
+
+To use, import in Eclipse and add these libraries in project:
+* actionbarsherlock
+* nineolddroid
+
+Introduction
+--------
+
 
 A helpful, yet simple, tool which makes it easy to load and send application icon requests for Android
 

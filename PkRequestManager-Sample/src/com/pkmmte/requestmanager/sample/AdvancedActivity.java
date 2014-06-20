@@ -3,12 +3,7 @@ package com.pkmmte.requestmanager.sample;
 import java.util.List;
 import java.util.Locale;
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -16,18 +11,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.util.SparseBooleanArray;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -36,11 +26,16 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.animation.AnimatorInflater;
+import com.nineoldandroids.animation.AnimatorSet;
 import com.pkmmte.requestmanager.AppInfo;
 import com.pkmmte.requestmanager.AppLoadListener;
 import com.pkmmte.requestmanager.PkRequestManager;
@@ -48,7 +43,8 @@ import com.pkmmte.requestmanager.RequestSettings;
 import com.pkmmte.requestmanager.SendRequestListener;
 import com.pkmmte.requestmanager.sample.QuickScroll.Scrollable;
 
-public class AdvancedActivity extends Activity implements OnItemClickListener, OnQueryTextListener, AppLoadListener, SendRequestListener
+
+public class AdvancedActivity extends SherlockActivity implements OnItemClickListener, AppLoadListener, SendRequestListener
 {
 	// Request Manager
 	private PkRequestManager mRequestManager;
@@ -61,7 +57,7 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 	private Handler mHandler;
 	
 	// Views
-	private SearchView searchView;
+	
 	private GridView mGrid;
 	private QuickScroll mScroll;
 	private LinearLayout containerLoading;
@@ -75,7 +71,7 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_advanced);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Initialize your layout views
 		initViews();
@@ -115,9 +111,9 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getMenuInflater().inflate(R.menu.request_advanced, menu);
-		searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-		searchView.setOnQueryTextListener(this);
+		getSupportMenuInflater().inflate(R.menu.request_advanced, menu);
+		//searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+		//searchView.setOnQueryTextListener(this);
 		
 		return true;
 	}
@@ -150,7 +146,7 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 		}
 	}
 	
-	@Override
+	/*@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		if (keyCode == KeyEvent.KEYCODE_BACK)
@@ -167,7 +163,7 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 		}
 		
 		return super.onKeyDown(keyCode, event);
-	}
+	}*/
 	
 	private void initViews()
 	{
@@ -195,13 +191,13 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 	    	.emailSubject("[MyIconPack] App Icon Request")  // Email Subject
 	    	.emailPrecontent("These apps are missing on my phone:\n\n") // Text before the main app information
 	    	.saveLocation(Environment.getExternalStorageDirectory().getAbsolutePath() + "/mytheme/.icon_request")   // Location to where the .zips and temporary files will be saved
-	    	.appfilterName("appfilter.xml") // Specify your appfilter.xml name if it's different from the standard. This will be used to filter out apps from the list.
+	    	//.appfilterName("appfilter.xml") // Specify your appfilter.xml name if it's different from the standard. This will be used to filter out apps from the list.
 	    	.compressFormat(PkRequestManager.PNG)   // Compression format for the attached app icons
 	    	.appendInformation(true)    // Choose whether or not you'd like to receive information about the user's device such as OS version, manufacturer, model number, build, etc.
 	    	.createAppfilter(true)  // True if you'd like to automatically generate an appfilter.xml for the requested apps
 	    	.createZip(true)    // True if you want to receive app icons with the email
-	    	.filterAutomatic(true)  // True if you want apps you support in your appfilter.xml to be filtered out from automatic requests
-	    	.filterDefined(true)    // True if you don't want apps you already defined in your appfilter.xml to show up in the app list
+	    	.filterAutomatic(false)  // True if you want apps you support in your appfilter.xml to be filtered out from automatic requests
+	    	.filterDefined(false)    // True if you don't want apps you already defined in your appfilter.xml to show up in the app list
 	    	.byteBuffer(2048)   // Buffer size in bytes for writing to memory.
 	    	.compressQuality(100)   // Compression quality for attached app icons
 	    	.build());
@@ -241,6 +237,9 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 				// Update Number of apps selected
 				int numSelected = mRequestManager.getNumSelected();
 				txtSelected.setText(getResources().getQuantityString(R.plurals.num_apps_selected, numSelected, numSelected));
+				
+				// Let the adapter know you selected something
+				mAdapter.notifyDataSetChanged(); //Fixed view not updating
 			}
 		});
 		btnDeselectAll.setOnClickListener(new OnClickListener() {
@@ -270,6 +269,9 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 				// Update Number of apps selected
 				int numSelected = mRequestManager.getNumSelected();
 				txtSelected.setText(getResources().getQuantityString(R.plurals.num_apps_selected, numSelected, numSelected));
+				
+				// Let the adapter know you selected something
+				mAdapter.notifyDataSetChanged(); //Fixed view not updating
 			}
 		});
 		
@@ -336,30 +338,32 @@ public class AdvancedActivity extends Activity implements OnItemClickListener, O
 		mApps.set(position, mApp);
 		
 		// Let the adapter know you selected something
-		//mAdapter.notifyDataSetChanged();
+		mAdapter.notifyDataSetChanged(); //Fixed view not updating
 		
 		// Update Number of apps selected
 		int numSelected = mRequestManager.getNumSelected();
 		txtSelected.setText(getResources().getQuantityString(R.plurals.num_apps_selected, numSelected, numSelected));
 	}
 	
+	/*@SuppressLint("NewApi")
 	@Override
 	public boolean onQueryTextSubmit(String query)
 	{
 		// TODO
 		
 		// Hide Keyboard
-		((InputMethodManager) getSystemService(FragmentActivity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		((InputMethodManager) getSystemService(SherlockFragmentActivity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 		
 		return false;
-	}
+	}*/
 	
-	@Override
+	/*@Override
 	public boolean onQueryTextChange(String newText)
 	{
 		// TODO
 		return false;
-	}
+	}*/
 	
 	@Override
 	public void onAppPreload()

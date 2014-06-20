@@ -245,8 +245,8 @@ public class RequestSettings
 			this.appendInformation = true;
 			this.createAppfilter = true;
 			this.createZip = true;
-			this.filterAutomatic = true;
-			this.filterDefined = true;
+			this.filterAutomatic = false;
+			this.filterDefined = false;
 			this.byteBuffer = 2048;
 			this.compressQuality = 100;
 		}
@@ -389,7 +389,7 @@ public class RequestSettings
 		 * Filter apps already defined in your appfilter. This setting only 
 		 * applies when sending an automatic request.
 		 * <p>
-		 * <b>Default:</b> <code>true</code>
+		 * <b>Default:</b> <code>false</code>
 		 * 
 		 * @param filterAutomatic
 		 * @return
@@ -402,7 +402,7 @@ public class RequestSettings
 		/**
 		 * Filter apps already defined in your appfilter.
 		 * <p>
-		 * <b>Default:</b> <code>true</code>
+		 * <b>Default:</b> <code>false</code>
 		 * 
 		 * @param filterDefined
 		 * @return

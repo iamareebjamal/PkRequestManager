@@ -25,6 +25,10 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+import com.nineoldandroids.view.ViewHelper;
+
+
 /** Scroller used for the Advanced Sample **/
 public class QuickScroll extends View
 {
@@ -336,7 +340,7 @@ public class QuickScroll extends View
 			else if (move > getHeight() - mScrollIndicator.getHeight())
 				move = getHeight() - mScrollIndicator.getHeight();
 			
-			mScrollIndicator.setTranslationY(move);
+			ViewHelper.setTranslationY(mScrollIndicator, move);
 		}
 		
 		if (mType == TYPE_INDICATOR_WITH_HANDLE || mType == TYPE_POPUP_WITH_HANDLE)
@@ -363,7 +367,7 @@ public class QuickScroll extends View
 		else if (move > getHeight() - mHandlebar.getHeight() - mScrollbarMargin)
 			move = getHeight() - mHandlebar.getHeight() - mScrollbarMargin;
 		
-		mHandlebar.setTranslationY(move);
+		ViewHelper.setTranslationY(mHandlebar, move);
 	}
 	
 	/**

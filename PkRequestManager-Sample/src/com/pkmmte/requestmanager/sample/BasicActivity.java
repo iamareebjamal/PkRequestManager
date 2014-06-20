@@ -2,12 +2,10 @@ package com.pkmmte.requestmanager.sample;
 
 import java.util.List;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,11 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.pkmmte.requestmanager.AppInfo;
 import com.pkmmte.requestmanager.PkRequestManager;
 import com.pkmmte.requestmanager.RequestSettings;
 
-public class BasicActivity extends Activity
+public class BasicActivity extends SherlockActivity
 {
 	// Request Manager
 	private PkRequestManager mRequestManager;
@@ -40,7 +41,7 @@ public class BasicActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_basic);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Grab a reference to the manager and store it in a variable. This helps make code shorter.
 		mRequestManager = PkRequestManager.getInstance(this);
@@ -51,6 +52,7 @@ public class BasicActivity extends Activity
 		// Set your custom settings. Email address is required! Everything else is set to default.
 		mRequestManager.setSettings(new RequestSettings.Builder()
 		.addEmailAddress("example@gmail.com")
+		.filterDefined(false) //Set filter apps to false for development purpose
 		.build());
 		
 		// Load the list of apps if none are loaded. This should normally be done asynchronously.
@@ -82,7 +84,7 @@ public class BasicActivity extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getMenuInflater().inflate(R.menu.request, menu);
+		getSupportMenuInflater().inflate(R.menu.request, menu);
 		
 		return true;
 	}

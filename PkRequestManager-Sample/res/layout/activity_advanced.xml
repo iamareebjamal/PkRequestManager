@@ -4,10 +4,12 @@
 
     <LinearLayout
         android:id="@+id/Loading"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/panel"
         android:orientation="horizontal"
         android:visibility="visible" >
 
@@ -22,7 +24,7 @@
             android:layout_margin="8dp"
             android:fontFamily="sans-serif-light"
             android:text="@string/preparing_to_load"
-            android:textColor="@color/pk_text"
+            android:textColor="@color/grey"
             android:textSize="20sp" />
     </LinearLayout>
 

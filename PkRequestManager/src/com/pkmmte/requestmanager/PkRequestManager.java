@@ -43,16 +43,15 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -77,7 +76,7 @@ public class PkRequestManager extends Static
 	// General Public Constants
 	public static final CompressFormat PNG = CompressFormat.PNG;
 	public static final CompressFormat JPEG = CompressFormat.JPEG;
-	public static final CompressFormat WEBP = CompressFormat.WEBP;
+	//public static final CompressFormat WEBP = CompressFormat.WEBP;
 	public static final String PLAY_LINK_BASE = "https://play.google.com/store/apps/details?id=";
 	public static final int MAX_PROGRESS = 100;
 	public static final int STATUS_PRELOAD = 0;
@@ -223,11 +222,18 @@ public class PkRequestManager extends Static
 	 * @param parallel	Boolean indicating whether to run serially or in parallel. 
 	 * 					True for parallel, False for serial.
 	 */
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public void loadAppsAsync(boolean parallel)
 	{
 		if(loadTask.getStatus() == AsyncTask.Status.PENDING) {
 			// Execute task if it's ready to go!
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
 			loadTask.executeOnExecutor(parallel ? AsyncTask.THREAD_POOL_EXECUTOR : AsyncTask.SERIAL_EXECUTOR);
+			} else {
+				
+				loadTask.execute();
+			}
 		}
 		else if(loadTask.getStatus() == AsyncTask.Status.RUNNING && debugEnabled) {
 			// Don't execute if already running
@@ -549,11 +555,19 @@ public class PkRequestManager extends Static
 	 * @param parallel	Boolean indicating whether to run serially or in parallel. 
 	 * 					True for parallel, False for serial.
 	 */
+	@SuppressLint("NewApi")
 	public void sendRequestAsync(boolean parallel)
 	{
 		if(sendTask.getStatus() == AsyncTask.Status.PENDING) {
 			// Execute task if it's ready to go!
-			sendTask.executeOnExecutor(parallel ? AsyncTask.THREAD_POOL_EXECUTOR : AsyncTask.SERIAL_EXECUTOR);
+			
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+				sendTask.executeOnExecutor(parallel ? AsyncTask.THREAD_POOL_EXECUTOR : AsyncTask.SERIAL_EXECUTOR);
+				} else {
+					
+					sendTask.execute();
+				}
+			
 		}
 		else if(sendTask.getStatus() == AsyncTask.Status.RUNNING && debugEnabled) {
 			// Don't execute if already running
@@ -612,11 +626,18 @@ public class PkRequestManager extends Static
 	 * @param parallel	Boolean indicating whether to run serially or in parallel. 
 	 * 					True for parallel, False for serial.
 	 */
+	@SuppressLint("NewApi")
 	public void sendAutomaticRequestAsync(boolean parallel)
 	{
 		if(autoTask.getStatus() == AsyncTask.Status.PENDING) {
 			// Execute task if it's ready to go!
-			autoTask.executeOnExecutor(parallel ? AsyncTask.THREAD_POOL_EXECUTOR : AsyncTask.SERIAL_EXECUTOR);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+				autoTask.executeOnExecutor(parallel ? AsyncTask.THREAD_POOL_EXECUTOR : AsyncTask.SERIAL_EXECUTOR);
+				} else {
+					
+					autoTask.execute();
+				}
+			
 		}
 		else if(autoTask.getStatus() == AsyncTask.Status.RUNNING && debugEnabled) {
 			// Don't execute if already running

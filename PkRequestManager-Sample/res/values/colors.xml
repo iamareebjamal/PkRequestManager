@@ -4,6 +4,7 @@
     <color name="transparent">#00000000</color>
     <color name="black_50">#AA000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#FFcccccc</color>
     <color name="pk_text">#FF323232</color>
     <color name="divider">#cca5a0a5</color>
     <color name="holo_blue_light_transparent">#4433b5e5</color>

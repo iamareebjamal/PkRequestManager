@@ -3,7 +3,6 @@ package com.pkmmte.requestmanager.sample;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
@@ -11,8 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,12 +21,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.pkmmte.requestmanager.AppInfo;
 import com.pkmmte.requestmanager.AppLoadListener;
 import com.pkmmte.requestmanager.PkRequestManager;
 import com.pkmmte.requestmanager.RequestSettings;
 
-public class IntermediateActivity extends Activity implements AppLoadListener
+public class IntermediateActivity extends SherlockActivity implements AppLoadListener
 {
 	// Request Manager
 	private PkRequestManager mRequestManager;
@@ -49,7 +49,7 @@ public class IntermediateActivity extends Activity implements AppLoadListener
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intermediate);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		// Initialize your manager
 		initRequestManager();
@@ -88,7 +88,7 @@ public class IntermediateActivity extends Activity implements AppLoadListener
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getMenuInflater().inflate(R.menu.request, menu);
+		getSupportMenuInflater().inflate(R.menu.request, menu);
 		
 		return true;
 	}
@@ -132,7 +132,7 @@ public class IntermediateActivity extends Activity implements AppLoadListener
 		.saveLocation(Environment.getExternalStorageDirectory().getAbsolutePath() + "/mytheme/.icon_request")
 		.createAppfilter(true)
 		.createZip(true)
-		.filterDefined(true)
+		.filterDefined(false) //Set filter apps to false for development purpose
 		.build());
 	}
 	
