@@ -86,11 +86,14 @@ public class PkRequestManager extends Static
 	public static final int STATUS_LOADED = 4;
 	
 	// Keep a single instance throughout the app for simplicity
-	private static PkRequestManager mInstance = null;
+	public static PkRequestManager mInstance = null;
 	
 	// For issue tracking purposes
 	private boolean debugEnabled;
 	private static final String LOG_TAG = "RequestManager";
+	
+	//For space
+	private boolean space = false;
 	
 	// Custom request configuration data
 	private RequestSettings mSettings;
@@ -164,6 +167,7 @@ public class PkRequestManager extends Static
 	 */
 	public PkRequestManager(Context context)
 	{
+		this.space = false;
 		this.debugEnabled = false;
 		this.mSettings = new RequestSettings();
 		this.mContext = context;
@@ -387,7 +391,7 @@ public class PkRequestManager extends Static
 				// Generate appfilter content (if enabled)
 				if(createAppfilter) {
 					xmlBuilder.append("<!-- " + mAppInfo.getName() + " -->\n");
-					xmlBuilder.append("<item component=\"ComponentInfo{" + mAppInfo.getCode() + "}\" drawable=\"" + convertDrawableName(mAppInfo.getName()) + "\"/>" + "\n");			
+					xmlBuilder.append("<item component=\"ComponentInfo{" + mAppInfo.getCode() + "}\" drawable=\"" + convertDrawableName(mAppInfo.getName(), space) + "\"/>" + "\n");			
 				}
 				
 				// Save drawable if we're going to compress into a zip later
@@ -397,7 +401,7 @@ public class PkRequestManager extends Static
 					
 					// Write bitmap to storage as PNG
 					try {
-						String bmDir = saveLoc2 + "/" + mAppInfo.getCode().split("/")[0] + "_" + mAppInfo.getCode().split("/")[1]+ ".png";
+						String bmDir = saveLoc2 + "/" + convertDrawableName(mAppInfo.getName(), space) + ".png";
 						new File(bmDir).getParentFile().mkdirs();
 						FileOutputStream fOut = new FileOutputStream(bmDir);
 						bitmap.compress(compressFormat, compressQuality, fOut);
@@ -430,6 +434,11 @@ public class PkRequestManager extends Static
 			emailBuilder.append("\nDevice: " + Build.DEVICE);
 			emailBuilder.append("\nManufacturer: " + Build.MANUFACTURER);
 			emailBuilder.append("\nModel (and Product): " + Build.MODEL + " (" + Build.PRODUCT + ")");
+			xmlBuilder.append("\n\n<!-- \nDate: " + new SimpleDateFormat("dd.MM.yy", Locale.getDefault()).format(new Date()));
+			xmlBuilder.append("\nTime: " + new SimpleDateFormat("hh:mm:ss", Locale.getDefault()).format(new Date()));
+			xmlBuilder.append("\nDevice: " + Build.DEVICE);
+			xmlBuilder.append("\nManufacturer: " + Build.MANUFACTURER);
+			xmlBuilder.append("\nModel (and Product): " + Build.MODEL + " (" + Build.PRODUCT + ") -->");
 		}
 		
 		// Return if no apps were selected
@@ -468,9 +477,11 @@ public class PkRequestManager extends Static
 		if(createZip) {
 			if(debugEnabled)
 				Log.d(LOG_TAG, "Zipping files...");
-			SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd_hhmmss", Locale.getDefault());
-			zipName = date.format(new Date());
-			createZipFile(saveLoc2, true, saveLoc + "/" + zipName + ".zip");
+			
+			CharSequence app_name = mContext.getPackageManager().getApplicationLabel(mContext.getApplicationInfo());
+			SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy_hh:mm:ss", Locale.getDefault());
+			zipName = app_name + "_" + date.format(new Date());
+			createZipFile(saveLoc2, false, saveLoc + "/" + zipName + ".zip");
 		}
 		
 		// Initialize send intent with proper address, subject, and body values
@@ -964,6 +975,12 @@ public class PkRequestManager extends Static
 		}
 	}
 	
+	public void setSpace(boolean choice){
+		
+		this.space = choice;
+		
+	}
+	
 	/**
 	 * Returns a RequestSettings object with all values set.
 	 * 
@@ -1434,13 +1451,18 @@ public class PkRequestManager extends Static
 	 * @param appName
 	 * @return
 	 */
-	private String convertDrawableName(String appName)
+	public String convertDrawableName(String appName, boolean space)
 	{
-		return (appName
+		String complete = appName
 				.replaceAll("[^a-zA-Z0-9\\p{Z}]", "")	// Remove all special characters and symbols
 				.replaceFirst("^[0-9]+(?!$)", "")		// Remove all leading numbers unless they're all numbers
-				.toLowerCase(Locale.US)					// Turn everything into lower case
-				.replaceAll("\\p{Z}", "_"));			// Replace all kinds of spaces with underscores
+				.toLowerCase(Locale.US)				// Turn everything into lower case
+				.replaceAll("\\p{Z}", "_");			// Replace all kinds of spaces with underscore
+				if(space == false){
+					String noSpace = complete.replaceAll("_", ""); // Replace all kinds of spaces with nothing
+					return noSpace;
+				}
+		return complete;
 	}
 	
 	/**

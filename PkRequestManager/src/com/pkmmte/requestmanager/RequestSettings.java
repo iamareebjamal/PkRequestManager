@@ -53,7 +53,7 @@ public class RequestSettings
 		this.emailSubject = "No Subject";
 		this.emailPrecontent = "";
 		this.saveLocation = Environment.getExternalStorageDirectory().getAbsolutePath() + "/.icon_request";
-		this.saveLocation2 = this.saveLocation + "/files";
+		this.saveLocation2 = this.saveLocation;
 		this.appfilterName = "appfilter.xml";
 		this.compressFormat = CompressFormat.PNG;
 		this.appendInformation = true;
